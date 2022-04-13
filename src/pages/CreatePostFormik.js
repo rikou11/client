@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -8,14 +8,16 @@ const CreatePostFormik = () => {
     username: "",
     postText: "",
   };
+  const [CheckMark, setCheckMark] = useState(true);
   const onSubmit = (data) => {
     axios.post("http://localhost:3001/posts", data).then((response) => {
       console.log(`data inserted successfuly to database ! `);
+      setCheckMark(false);
     });
   };
   const validationSchema = Yup.object().shape({
     title: Yup.string().required(),
-    postText: Yup.string().required(),
+    postText: Yup.string().required("Post's invalid"),
     username: Yup.string().max(10).required(),
   });
   return (
@@ -52,8 +54,17 @@ const CreatePostFormik = () => {
               placeholder="(Ex. Post...)"
             />
             <button className="btn btn-primary " type="submit">
-              Create Post
-            </button>{" "}
+              {!CheckMark ? (
+                <lord-icon
+                  src="https://cdn.lordicon.com/crrnydsb.json"
+                  trigger="loop"
+                  colors="primary:#16c72e secondary:#fff"
+                  className="w-40 h-40 bg-white"
+                ></lord-icon>
+              ) : (
+                "Create Post"
+              )}
+            </button>
           </div>
         </Form>
       </Formik>

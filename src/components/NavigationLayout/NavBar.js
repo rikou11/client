@@ -32,7 +32,7 @@ const NavBar = () => {
           <ul className="menu menu-horizontal p-0 flex justify-between gap-2">
             <li>
               <button
-                className="btn btn-outline "
+                className="md:btn md:btn-outline hidden  "
                 onClick={() => Navigate("/create-post")}
               >
                 Create new post{" "}

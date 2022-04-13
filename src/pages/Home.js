@@ -20,7 +20,7 @@ const Home = () => {
           console.log(response.data);
         }
       });
-    }, 1000);
+    }, 500);
     return () => (mounted = false);
   }, []);
   // if data = 0

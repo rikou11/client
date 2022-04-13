@@ -1,35 +1,58 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import CommentsSection from "../components/CommentsSection";
+import NotFound from "./NotFound";
 
 const Post = () => {
+  const [Post, setPost] = useState([]);
   const { id } = useParams();
-  const obj = { id };
-  const post = [
-    {
-      username: "Nan!",
-      title: "Nan!",
-      postText: "Nan!",
-      id: "zazaza",
-      createdAt: "Nan!",
-    },
-  ];
-  var result = "";
-  // eslint-disable-next-line array-callback-return
-  post.map((i) => {
-    // eslint-disable-next-line eqeqeq
-    if (i.id == obj.id) {
-      return (result = i);
-    } else {
-      return (result = i);
-    }
-  });
+  const Navigate = useNavigate();
 
+  // eslint-disable-next-line no-unused-vars
+
+  useEffect(() => {
+    axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
+      if (response) {
+        console.log(response.data);
+        setPost(response.data);
+      } else {
+        setPost(false);
+      }
+    });
+  }, [id]);
+  if (!Post) {
+    return (
+      <div className="font-oxygen">
+        <NotFound msg={`this post doesn't exist`} />
+      </div>
+    );
+  }
   return (
-    <div className="h-screen flex justify-center py-28">
-      <div className="card w-[900px] h-[450px]  bg-white  shadow-xl">
-        <div className="card-body">
+    <div className="min-h-screen flex justify-center py-28">
+      <div className="card w-[300px] grid grid-cols-1 md:w-[700px] xl:w-[900px]   bg-white md:grid md:grid-cols-2 gap-4 shadow-xl">
+        <div className="card-body ">
+          <h1>
+            <button
+              className="text-gray-400 hover:text-gray-500 transition duration-200 "
+              onClick={() => Navigate("/")}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-12 w-12 "
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </h1>
           <h2 className="card-title text-2xl text-red-600 font-bold">
-            {result.title}
+            {Post.title}
           </h2>
           <h3 className="card-title font-thin text-base text-gray-600">
             <img
@@ -37,35 +60,26 @@ const Post = () => {
               alt=""
               className="rounded-full w-8  h-8"
             />{" "}
-            <span> {result.username}</span>
+            <span> {Post.username}</span>
           </h3>
           <p className="text-base text-left text-gray-900">
-            <span className="text-red-500">{result.postText} </span>
+            <span className="text-gray-700">
+              {Post.postText} Lorem ipsum dolor sit amet consectetur,
+              adipisicing elit. Quidem repellendus optio deleniti, molestiae quo
+              nesciunt, voluptatum, obcaecati illo nam laboriosam perferendis
+              quam maxime iure! Mollitia ducimus minima illo. In magnam
+              temporibus cupiditate sunt odio? Velit nihil quam ducimus
+              laboriosam perspiciatis?{" "}
+            </span>
           </p>
           <span className="text-[8px] flex justify-between text-gray-900">
-            <span>{result.createdAt ? result.createdAt : ""}</span>{" "}
-            <>
-              <button className="bg-gray-400 shadow-2xl  flex py-2 px-2  rounded-full  hover:bg-gray-500 transition duration-150  text-white">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </>
+            <span>{Post.createdAt ? Post.createdAt : ""}</span>{" "}
           </span>
         </div>
-
-        <p className="text-xs"></p>
+        <>
+          {" "}
+          <CommentsSection id={id} />
+        </>
       </div>
     </div>
   );
